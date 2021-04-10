@@ -1,2 +1,0 @@
-# OLX
-OLX website
