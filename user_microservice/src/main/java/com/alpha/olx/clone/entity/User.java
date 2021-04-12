@@ -39,6 +39,11 @@ public class User {
     @Column(name="ROLE", nullable = false)
     private String role;
 
+
+    private boolean isSeller;
+
+
+
     @Column(name = "PHOTO_LINK", unique = true)
     private String photoLink;
 

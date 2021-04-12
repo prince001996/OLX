@@ -11,3 +11,15 @@ public class CloneApplication {
 	}
 
 }
+
+/**
+ *
+ * To implement:
+ * 1. isSeller - user
+ * 2. list of messages
+ * 3. list of sales
+ * 4. login api-take email and password as required
+ * 5.
+ *
+ *
+ */

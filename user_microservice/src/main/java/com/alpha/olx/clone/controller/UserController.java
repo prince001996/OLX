@@ -8,14 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
+/*========================================================================================================*/
+
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/users")
 public class UserController {
     @Autowired
     private UserService userService;
+
+    /*==================================================================================================*/
 
     /**
      * @Description: Resgister user
@@ -24,9 +27,15 @@ public class UserController {
      */
     @PostMapping("/register/")
     private Response addUser(@RequestBody User user){
-        return userService.addUser(user);
+        try {
+            return userService.addUser(user);
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, e.getMessage());
+        }
     }
 
+
+    /*==================================================================================================*/
 
     /**
      * @Description: Get user from userId
@@ -42,6 +51,23 @@ public class UserController {
         }
     }
 
+    /*==================================================================================================*/
+
+    /**
+     * @Description: Get user by username
+     * @param userName
+     * @return user
+     */
+    @GetMapping("/username/{username}")
+    private User getUserByUserName(@PathVariable("username") String userName){
+        try{
+            return userService.getUserByUserName(userName);
+        }catch (UserNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    /*==================================================================================================*/
 
     /**
      * @Description: Get all users
@@ -50,14 +76,18 @@ public class UserController {
      */
     @GetMapping("/users")
     private List<User> getUsers(){
-        return userService.getUsers();
+        try {
+            return userService.getUsers();
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, e.getMessage());
+        }
     }
 
-
+    /*==================================================================================================*/
     /**
      * @Description: User exist or not check
      * @param: userId
-     * @return: DTO
+     * @return: Response
      */
     @GetMapping("/exist/{id}")
     private Response exist(@PathVariable("id") Long userId){
@@ -68,14 +98,16 @@ public class UserController {
         }
     }
 
+    /*==================================================================================================*/
+
 
     /**
      * @Description: Update username for a given userId
      * @param: userId
      * @param: userName
-     * @return: DTO
+     * @return: Response
      */
-    @PutMapping("/username/{id}")
+    @PutMapping("/update/username/{id}")
     private Response updateUsername(@PathVariable("id") Long userId, @RequestBody String userName){
         try{
             return userService.updateUsername(userId, userName);
@@ -85,13 +117,38 @@ public class UserController {
     }
 
 
+    /*==================================================================================================*/
+
+
+    /**
+     * @Description: Update mobile for given user id
+     * @param userId
+     * @param mobile
+     * @return Response
+     */
+    @PutMapping("/update/mobile/{id}")
+    private Response updateMobile(@PathVariable("id") Long userId, @RequestBody Long mobile){
+        try {
+            return userService.updateMobile(userId, mobile);
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, e.getMessage());
+        }
+    }
+
+    /*==================================================================================================*/
+
+
     /**
      * @Description: Delete user
      * @param: userId
-     * @return: DTO
+     * @return: Response
      */
     @DeleteMapping("/delete/{id}")
     private Response deleteUser(@PathVariable("id") Long userId){
-        return userService.deleteUser(userId);
+        try{
+            return userService.deleteUser(userId);
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, e.getMessage());
+        }
     }
 }
