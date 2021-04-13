@@ -27,11 +27,16 @@ public class UserService {
      */
     public Response addUser(User user) {
         Optional<User> present=userRepository.findById(user.getUserId());
+        Response response=new Response();
         if(present.isPresent()){
-            return new Response(HttpStatus.BAD_REQUEST, "User already exist with that user id");
+            response.setMessage("User already exist with that user id");
+            response.setStatus(HttpStatus.BAD_REQUEST);
+            return response;
         }
         userRepository.save(user);
-        return new Response(HttpStatus.CREATED, "User Registered");
+        response.setStatus(HttpStatus.CREATED);
+        response.setMessage("User Registered");
+        return response;
     }
 
     /*==================================================================================================*/
@@ -76,7 +81,10 @@ public class UserService {
         }
         user.get().setUserName(userName);
         userRepository.save(user.get());
-        return new Response(HttpStatus.OK, "Username updated");
+        Response response=new Response();
+        response.setMessage("Username updated");
+        response.setStatus(HttpStatus.OK);
+        return response;
     }
 
     /*==================================================================================================*/
@@ -92,7 +100,10 @@ public class UserService {
         if(user.isEmpty()){
             throw new UserNotFoundException("User not found in the repository");
         }
-        return new Response(HttpStatus.OK, "Yes");
+        Response response=new Response();
+        response.setMessage("Yes");
+        response.setStatus(HttpStatus.OK);
+        return response;
     }
 
 
@@ -108,12 +119,17 @@ public class UserService {
      */
     public Response deleteUser(Long userId) {
         Optional<User> user=userRepository.findById(userId);
+        Response response=new Response();
         if(user.isEmpty()){
-            return new Response(HttpStatus.NOT_FOUND, "User not found in repository");
+            response.setStatus(HttpStatus.NOT_FOUND);
+            response.setMessage("User not found in repository");
+            return response;
         }
         softCopyOfDeletedUsers.add(user.get());
         userRepository.deleteById(userId);
-        return new Response(HttpStatus.OK, "Deleted");
+        response.setMessage("Deleted");
+        response.setStatus(HttpStatus.OK);
+        return response;
     }
 
 
@@ -145,11 +161,16 @@ public class UserService {
      */
     public Response updateMobile(Long userId, Long mobile) {
         Optional<User> user=userRepository.findById(userId);
+        Response response=new Response();
         if(user.isEmpty()){
-            return new Response(HttpStatus.NOT_FOUND, "User not found in repository");
+            response.setStatus(HttpStatus.NOT_FOUND);
+            response.setMessage("User not found in repository");
+            return response;
         }
         user.get().setMobile(mobile);
         userRepository.save(user.get());
-        return new Response(HttpStatus.OK, "Mobile no updated");
+        response.setMessage("Mobile no updated");
+        response.setStatus(HttpStatus.OK);
+        return response;
     }
 }

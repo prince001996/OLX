@@ -40,7 +40,7 @@ public class User {
     private String role;
 
 
-    private boolean isSeller;
+//    private boolean isSeller;
 
 
 
