@@ -6,6 +6,7 @@ import com.alpha.olx.clone.exceptions.UserNotFoundException;
 import com.alpha.olx.clone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
@@ -26,7 +27,7 @@ public class UserController {
      * @return: user
      */
     @PostMapping("/register/")
-    public Response addUser(@RequestBody User user){
+    public ResponseEntity<String> addUser(@RequestBody User user){
         try {
             return userService.addUser(user);
         }catch (Exception e){
@@ -90,7 +91,7 @@ public class UserController {
      * @return: Response
      */
     @GetMapping("/exist/{id}")
-    public Response exist(@PathVariable("id") Long userId){
+    public ResponseEntity<String> exist(@PathVariable("id") Long userId){
         try {
             return userService.exist(userId);
         }catch (UserNotFoundException e){
@@ -108,7 +109,7 @@ public class UserController {
      * @return: Response
      */
     @PutMapping("/update/username/{id}")
-    public Response updateUsername(@PathVariable("id") Long userId, @RequestBody String userName){
+    public ResponseEntity<String> updateUsername(@PathVariable("id") Long userId, @RequestBody String userName){
         try{
             return userService.updateUsername(userId, userName);
         }catch (UserNotFoundException e){
@@ -127,7 +128,7 @@ public class UserController {
      * @return Response
      */
     @PutMapping("/update/mobile/{id}")
-    public Response updateMobile(@PathVariable("id") Long userId, @RequestBody Long mobile){
+    public ResponseEntity<String> updateMobile(@PathVariable("id") Long userId, @RequestBody Long mobile){
         try {
             return userService.updateMobile(userId, mobile);
         }catch (Exception e){
@@ -144,7 +145,7 @@ public class UserController {
      * @return: Response
      */
     @DeleteMapping("/delete/{id}")
-    public Response deleteUser(@PathVariable("id") Long userId){
+    public ResponseEntity<String> deleteUser(@PathVariable("id") Long userId){
         try{
             return userService.deleteUser(userId);
         }catch (Exception e){

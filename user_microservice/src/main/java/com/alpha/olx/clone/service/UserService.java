@@ -6,6 +6,7 @@ import com.alpha.olx.clone.exceptions.UserNotFoundException;
 import com.alpha.olx.clone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,18 +26,14 @@ public class UserService {
      * @param user
      * @return Response
      */
-    public Response addUser(User user) {
+    public ResponseEntity<String> addUser(User user) {
         Optional<User> present=userRepository.findById(user.getUserId());
         Response response=new Response();
         if(present.isPresent()){
-            response.setMessage("User already exist with that user id");
-            response.setStatus(HttpStatus.BAD_REQUEST);
-            return response;
+            return new ResponseEntity<>("User already exist with that user id", HttpStatus.BAD_REQUEST);
         }
         userRepository.save(user);
-        response.setStatus(HttpStatus.CREATED);
-        response.setMessage("User Registered");
-        return response;
+        return new ResponseEntity<>("User Registered", HttpStatus.CREATED);
     }
 
     /*==================================================================================================*/
@@ -74,17 +71,14 @@ public class UserService {
      * @return Response
      * @throws UserNotFoundException
      */
-    public Response updateUsername(Long userId, String userName) throws UserNotFoundException {
+    public ResponseEntity<String> updateUsername(Long userId, String userName) throws UserNotFoundException {
         Optional<User> user=userRepository.findById(userId);
         if(user.isEmpty()){
             throw new UserNotFoundException("User not found in the repository");
         }
         user.get().setUserName(userName);
         userRepository.save(user.get());
-        Response response=new Response();
-        response.setMessage("Username updated");
-        response.setStatus(HttpStatus.OK);
-        return response;
+        return new ResponseEntity<>("Username updated", HttpStatus.OK);
     }
 
     /*==================================================================================================*/
@@ -95,15 +89,12 @@ public class UserService {
      * @return Response
      * @throws UserNotFoundException
      */
-    public Response exist(Long userId) throws UserNotFoundException{
+    public ResponseEntity<String> exist(Long userId) throws UserNotFoundException{
         Optional<User> user=userRepository.findById(userId);
         if(user.isEmpty()){
             throw new UserNotFoundException("User not found in the repository");
         }
-        Response response=new Response();
-        response.setMessage("Yes");
-        response.setStatus(HttpStatus.OK);
-        return response;
+        return new ResponseEntity<>("Yes", HttpStatus.OK);
     }
 
 
@@ -117,19 +108,14 @@ public class UserService {
      * @param userId
      * @return Response
      */
-    public Response deleteUser(Long userId) {
+    public ResponseEntity<String> deleteUser(Long userId) {
         Optional<User> user=userRepository.findById(userId);
-        Response response=new Response();
         if(user.isEmpty()){
-            response.setStatus(HttpStatus.NOT_FOUND);
-            response.setMessage("User not found in repository");
-            return response;
+            return new ResponseEntity<>("User not found in repository", HttpStatus.NOT_FOUND);
         }
         softCopyOfDeletedUsers.add(user.get());
         userRepository.deleteById(userId);
-        response.setMessage("Deleted");
-        response.setStatus(HttpStatus.OK);
-        return response;
+        return new ResponseEntity<>("Deleted", HttpStatus.OK);
     }
 
 
@@ -159,18 +145,13 @@ public class UserService {
      * @param mobile
      * @return Response
      */
-    public Response updateMobile(Long userId, Long mobile) {
+    public ResponseEntity<String> updateMobile(Long userId, Long mobile) {
         Optional<User> user=userRepository.findById(userId);
-        Response response=new Response();
         if(user.isEmpty()){
-            response.setStatus(HttpStatus.NOT_FOUND);
-            response.setMessage("User not found in repository");
-            return response;
+            return new ResponseEntity<>("User not found in repository", HttpStatus.NOT_FOUND);
         }
         user.get().setMobile(mobile);
         userRepository.save(user.get());
-        response.setMessage("Mobile no updated");
-        response.setStatus(HttpStatus.OK);
-        return response;
+        return new ResponseEntity<>("Mobile Updated", HttpStatus.OK);
     }
 }
