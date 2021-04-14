@@ -1,14 +1,16 @@
 package com.olx.categories.Controller;
 
 
+import com.olx.categories.DTO.CategoryDTO;
 import com.olx.categories.Entity.Category;
 import com.olx.categories.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/categories")
 @RestController
 public class CategoryController {
 
@@ -16,19 +18,23 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/category/")
-    public String addCategory(@RequestBody Category category){
+    public ResponseEntity<String> addCategory(@RequestBody Category category){
         return categoryService.addCategory(category);
     }
 
     @GetMapping("/categories")
-    public List<Category> getCategory(){
+    public ResponseEntity<List> getCategory(){
         return categoryService.getAllCategory();
     }
 
     @GetMapping("/category/{categoryId}")
-    public Category getCategory(@PathVariable("categoryId") Long categoryId){
+    public ResponseEntity<CategoryDTO> getCategory(@PathVariable("categoryId") Long categoryId){
         return categoryService.getCategory(categoryId);
     }
 
+    @PutMapping("/category/{categoryId}")
+    public ResponseEntity<String> updateCategory(@PathVariable("categoryId") Long categoryId,  @RequestBody CategoryDTO categoryDTO){
+        return categoryService.updateCategory(categoryId, categoryDTO);
+    }
 
 }

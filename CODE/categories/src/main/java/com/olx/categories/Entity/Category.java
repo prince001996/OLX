@@ -10,18 +10,16 @@ import java.util.List;
 
 @Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     private String name;
 
     @JsonIgnore
     @OneToMany
-    @JoinColumn(name="item_id", referencedColumnName="id")
+    @JoinColumn(name="category_id", referencedColumnName="id")
     private List<Item> items;
     public void addItem(Item item){
         this.items.add(item);

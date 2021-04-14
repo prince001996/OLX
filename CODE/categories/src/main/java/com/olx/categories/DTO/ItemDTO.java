@@ -1,17 +1,13 @@
-package com.olx.categories.Entity;
+package com.olx.categories.DTO;
 
 import lombok.Data;
 
-import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
 
-@Entity
 @Data
-public class Item {
+public class ItemDTO {
 
-    @Id
-    @GeneratedValue
     private Long id;
     private String title;
     private String brand;
@@ -23,7 +19,6 @@ public class Item {
     private Time time;
     private Long pincode;
     private boolean status;
+    private Long categoryID;
 
-    @ManyToOne
-    private Category category;
 }
