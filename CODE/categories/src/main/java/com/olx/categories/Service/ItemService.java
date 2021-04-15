@@ -3,12 +3,14 @@ package com.olx.categories.Service;
 import com.olx.categories.DTO.ItemDTO;
 import com.olx.categories.Entity.Item;
 import com.olx.categories.Repository.ItemRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,27 +23,36 @@ public class ItemService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     public ResponseEntity<List> getAllItems() {
         ResponseEntity<List> responseEntity = new ResponseEntity<>(itemRepository.findAll(), HttpStatus.OK);
         return responseEntity;
     }
 
+    // add category id into dto
     public ResponseEntity<ItemDTO> getItemById(Long itemId) {
-        Item item = itemRepository.findById(itemId);
-        if()
-        ResponseEntity<ItemDTO> responseEntity = new ResponseEntity<>(, HttpStatus.OK);
-        return responseEntity;
+        Optional<Item> item = itemRepository.findById(itemId);
+        ItemDTO itemDTO = new ItemDTO();
+        if(item.isPresent()) {
+            modelMapper.map(item.get(), itemDTO);
+            ResponseEntity<ItemDTO> responseEntity = new ResponseEntity<>(itemDTO, HttpStatus.OK);
+            return responseEntity;
+        }
+        ResponseEntity<ItemDTO> responseEntity2 = new ResponseEntity<>(itemDTO, HttpStatus.NOT_FOUND);
+        return responseEntity2;
     }
 
     public ResponseEntity<List> getAllItemsBySellerId(Long userId) {
         //check if user exists or not
-        ResponseEntity<String> user = restTemplate.getForEntity("http://localhost:2020/api/v1/exist/"+userId, String.class);
+        ResponseEntity<String> user = restTemplate.getForEntity("http://localhost:2020/users/exist/"+userId, String.class);
         if(user.equals("Yes"))
         {
             ResponseEntity<List> responseEntity = new ResponseEntity<>(itemRepository.findAllByUserId(userId), HttpStatus.OK);
             return responseEntity;
         }
-        ResponseEntity<List> responseEntity2 = new ResponseEntity<>(itemRepository.findAllByUserId(userId), HttpStatus.NOT_FOUND);
+        ResponseEntity<List> responseEntity2 = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
         return responseEntity2;
     }
 
